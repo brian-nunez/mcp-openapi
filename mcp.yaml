@@ -1,0 +1,13 @@
+openapi:
+  spec_path: ./schema/openapi.sample.yaml
+  # allow all by omitting `allow:`
+  deny:
+    - DELETE /pets/{id}
+
+transports:
+  - type: sse
+    host: 0.0.0.0
+    port: 8001
+  - type: streamable-http
+    host: 0.0.0.0
+    port: 8000
