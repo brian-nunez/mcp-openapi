@@ -180,10 +180,15 @@ async def make_server_from_openapi(cfg: dict) -> FastMCP:
     base_url = None
     if servers and isinstance(servers, list) and isinstance(servers[0], dict):
         base_url = servers[0].get("url")
-    if not base_url:
-        base_url = os.environ.get("OPENAPI_BASE_URL", "http://localhost:3000")
 
-    client = httpx.AsyncClient(base_url=base_url)
+    if not base_url:
+        base_url = (
+            cfg.get("openapi").get("base_url")
+            or os.environ.get("OPENAPI_BASE_URL")
+            or "http://localhost:3000"
+        )
+
+    client = httpx.AsyncClient(base_url=base_url, verify=False)
 
     mcp = FastMCP.from_openapi(
         openapi_spec=filtered,
@@ -244,4 +249,5 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
+        pass
         pass
